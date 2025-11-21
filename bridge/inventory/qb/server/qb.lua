@@ -18,7 +18,6 @@ function ps.removeItem(identifier, item, amount, slot, reason)
     return false
 end
 
-
 -- @param identifier number|string i.e. source or CitizenID
 -- @param item string
 -- @param amount number
@@ -27,7 +26,7 @@ end
 -- @param reason string ** optional
 -- @return boolean
 -- example: ps.addItem(source, 'bread', 1, {quality = 100}, false, 'ps_lib Add Item')
-function ps.addItem(identifier, item, amount,meta, slot, reason)
+function ps.addItem(identifier, item, amount, meta, slot, reason)
     if not identifier or not item then return end
     if not amount then amount = 1 end
     if not slot then slot = false end
@@ -38,7 +37,6 @@ function ps.addItem(identifier, item, amount,meta, slot, reason)
     end
     return false
 end
-
 
 -- @param source number|string i.e. source or CitizenID
 -- @param identifier string i.e. stash name
@@ -92,7 +90,6 @@ function ps.clearStash(source, identifier)
     exports['qb-inventory']:ClearStash(source, identifier)
 end
 
-
 -- @param identifier number|string i.e. source
 -- @param item string
 -- @return number
@@ -136,15 +133,22 @@ function ps.createShop(source, shopData)
     if not shopData.items then shopData.items = {} end
     if not shopData.slots then shopData.slots = #shopData.items end
     if not shopData.label then shopData.label = shopData.name end
-    exports['qb-inventory']:CreateShop(source, shopData.name, shopData.items)
+
+    exports['qb-inventory']:CreateShop({
+        name = shopData.name,
+        label = shopData.label,
+        slots = shopData.slots,
+        items = shopData.items
+    })
+
     exports['qb-inventory']:OpenShop(source, shopData.name)
 end
 
 -- @param source number|string i.e. source
 -- @param recipe table i.e. {take = {bread = 1, water = 1}, give = {sandwich = 1}}
 function ps.verifyRecipe(source, recipe)
-    local need, have = 0,0
-    for k, v in pairs (recipe) do
+    local need, have = 0, 0
+    for k, v in pairs(recipe) do
         if ps.getItemCount(source, k) >= v then
             have = have + 1
         end
